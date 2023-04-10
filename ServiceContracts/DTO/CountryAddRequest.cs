@@ -11,7 +11,11 @@ namespace ServiceContracts.DTO
     {
         public string? CountryName { get; set; }
 
-        public Country ToCountry()
+		/// <summary>
+		/// Converts the current object of CountryAddRequest into a new Country object
+		/// </summary>
+		/// <returns>A Country object that has the same name as the current CountryAddRequest object</returns>
+		public Country ToCountry()
         {
             return new Country() { CountryName = CountryName };
         }

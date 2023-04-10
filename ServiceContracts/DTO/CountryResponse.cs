@@ -11,7 +11,7 @@ namespace ServiceContracts.DTO
         public Guid CountryID { get; set; }
         public string? CountryName { get; set; }
 
-        //Compared the current object with another CountryResponse type
+        //Compares the current object with another CountryResponse type
         //Returns true if their values are same, false otherwise
         public override bool Equals(object? obj)
         {
@@ -31,9 +31,12 @@ namespace ServiceContracts.DTO
 
     public static class CountryExtensions
     {
-        //extension method for Country entity class
-        //Converts from Country object to CountryResponse object
-        public static CountryResponse ToCountryResponse(this Country country)
+		/// <summary>
+		/// An extension method to convert a Country object into a CountryResponse object
+		/// </summary>
+		/// <param name="country">Country object to be converted</param>
+		/// <returns>A CountrynResponse object with the same data as the provided Country object</returns>
+		public static CountryResponse ToCountryResponse(this Country country)
         {
             return new CountryResponse()
             {
