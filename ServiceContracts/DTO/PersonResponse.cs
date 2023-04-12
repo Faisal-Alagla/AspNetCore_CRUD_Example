@@ -34,6 +34,7 @@ namespace ServiceContracts.DTO
 					this.DateOfBirth == person_to_compare.DateOfBirth &&
 					this.Gender == person_to_compare.Gender &&
 					this.CountryID == person_to_compare.CountryID &&
+					this.Country == person_to_compare.Country &&
 					this.Address == person_to_compare.Address &&
 					this.ReceiveNewsLetters == person_to_compare.ReceiveNewsLetters &&
 					this.Age == person_to_compare.Age;
@@ -42,6 +43,14 @@ namespace ServiceContracts.DTO
 		public override int GetHashCode()
 		{
 			return base.GetHashCode();
+		}
+
+		public override string ToString()
+		{
+			return $"PersonID: {PersonID}, PersonName: {PersonName}, Email: {Email}, " +
+				$"DateOfBirth: {DateOfBirth?.ToString("dd MM yyyy")}, Gender: {Gender}, " +
+				$"CountryID: {CountryID}, Country: {Country}, Address: {Address}, " +
+				$"ReceiveNewsLeter: {ReceiveNewsLetters}, Age: {Age}";
 		}
 	}
 

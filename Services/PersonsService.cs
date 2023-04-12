@@ -19,7 +19,7 @@ namespace Services
 		}
 
 		//Helper method to convert a Person into PersonResponse type
-		private PersonResponse ConvertPersonToPersonResponse(Person person)
+		private PersonResponse ToPersonResponse(Person person)
 		{
 			PersonResponse personResponse = person.ToPersonResponse();
 			personResponse.Country = _countryService.GetCountryByCountryID(person.CountryID)?.CountryName;
@@ -46,12 +46,23 @@ namespace Services
 			//Add to the list of persons
 			_persons.Add(person);
 
-			return ConvertPersonToPersonResponse(person);
+			return ToPersonResponse(person);
 		}
 
 		public List<PersonResponse> GetAllPersons()
 		{
-			throw new NotImplementedException();
+			return _persons.Select(person => ToPersonResponse(person)).ToList();
+		}
+
+		public PersonResponse? GetPersonByPersonID(Guid? personID)
+		{
+			if (personID == null) { return null; }
+
+			Person? person = _persons.FirstOrDefault(person => person.PersonID == personID);
+
+			if (person == null) { return null; }
+
+			return person.ToPersonResponse();
 		}
 	}
 }
