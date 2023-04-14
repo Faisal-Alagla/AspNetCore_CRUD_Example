@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Entities;
 using ServiceContracts.Enums;
 using System.ComponentModel.DataAnnotations;
@@ -6,13 +7,15 @@ using System.ComponentModel.DataAnnotations;
 namespace ServiceContracts.DTO
 {
 	/// <summary>
-	/// DTO class for adding a new Person
+	/// DTO class for updating an existing person
 	/// </summary>
-	public class PersonAddRequest
+	public class PersonUpdateRequest
 	{
-		[Required(ErrorMessage = "Person Name can't be blank")]
+		[Required(ErrorMessage = "PersonID can't be blank")]
+		public Guid PersonID { get; set; }
+		[Required(ErrorMessage = "PersonName can't be blank")]
 		public string? PersonName { get; set; }
-		[Required(ErrorMessage = "Person Name can't be blank")]
+		[Required(ErrorMessage = "Email can't be blank")]
 		[EmailAddress(ErrorMessage = "It should be a valid email")]
 		public string? Email { get; set; }
 		public DateTime? DateOfBirth { get; set; }
@@ -22,13 +25,14 @@ namespace ServiceContracts.DTO
 		public bool ReceiveNewsLetters { get; set; }
 
 		/// <summary>
-		/// Converts the current object of PersonAddRequest into a new Person object
+		/// Converts the current object of PersonUpdateRequest into a new Person object
 		/// </summary>
-		/// <returns>A Person object that has the same data as the current PersonAddRequest object</returns>
+		/// <returns>A Person object that has the same data as the current PersonUpdateRequest object</returns>
 		public Person ToPerson()
 		{
 			return new Person()
 			{
+				PersonID = PersonID,
 				PersonName = PersonName,
 				Email = Email,
 				DateOfBirth = DateOfBirth,

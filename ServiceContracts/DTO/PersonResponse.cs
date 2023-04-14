@@ -1,5 +1,6 @@
 ﻿using System;
 using Entities;
+using ServiceContracts.Enums;
 
 namespace ServiceContracts.DTO
 {
@@ -28,16 +29,16 @@ namespace ServiceContracts.DTO
 
 			PersonResponse person_to_compare = (PersonResponse)obj;
 
-			return this.PersonID == person_to_compare.PersonID &&
-					this.PersonName == person_to_compare.PersonName &&
-					this.Email == person_to_compare.Email &&
-					this.DateOfBirth == person_to_compare.DateOfBirth &&
-					this.Gender == person_to_compare.Gender &&
-					this.CountryID == person_to_compare.CountryID &&
-					this.Country == person_to_compare.Country &&
-					this.Address == person_to_compare.Address &&
-					this.ReceiveNewsLetters == person_to_compare.ReceiveNewsLetters &&
-					this.Age == person_to_compare.Age;
+			return PersonID == person_to_compare.PersonID &&
+					PersonName == person_to_compare.PersonName &&
+					Email == person_to_compare.Email &&
+					DateOfBirth == person_to_compare.DateOfBirth &&
+					Gender == person_to_compare.Gender &&
+					CountryID == person_to_compare.CountryID &&
+					Country == person_to_compare.Country &&
+					Address == person_to_compare.Address &&
+					ReceiveNewsLetters == person_to_compare.ReceiveNewsLetters &&
+					Age == person_to_compare.Age;
 		}
 
 		public override int GetHashCode()
@@ -51,6 +52,21 @@ namespace ServiceContracts.DTO
 				$"DateOfBirth: {DateOfBirth?.ToString("dd MM yyyy")}, Gender: {Gender}, " +
 				$"CountryID: {CountryID}, Country: {Country}, Address: {Address}, " +
 				$"ReceiveNewsLeter: {ReceiveNewsLetters}, Age: {Age}";
+		}
+
+		public PersonUpdateRequest ToPersonUpdateRequest()
+		{
+			return new PersonUpdateRequest()
+			{
+				PersonID = PersonID,
+				PersonName = PersonName,
+				Email = Email,
+				DateOfBirth = DateOfBirth,
+				Gender = (GenderOptions)Enum.Parse(typeof(GenderOptions), this.Gender, true),
+				CountryID = CountryID,
+				Address = Address,
+				ReceiveNewsLetters = ReceiveNewsLetters,
+			};
 		}
 	}
 
