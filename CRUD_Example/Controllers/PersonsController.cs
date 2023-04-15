@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
@@ -50,8 +51,9 @@ namespace CRUD_Example.Controllers
 		public IActionResult Create()
 		{
 			List<CountryResponse> countries = _countriesService.GetAllCountries();
-			ViewBag.Countries = countries;
-
+			ViewBag.Countries = countries.Select(temp =>
+			new SelectListItem() { Text = temp.CountryName, Value = temp.CountryID.ToString() }
+			);
 			return View();
 		}
 
@@ -63,7 +65,9 @@ namespace CRUD_Example.Controllers
 			if (!ModelState.IsValid)
 			{
 				List<CountryResponse> countries = _countriesService.GetAllCountries();
-				ViewBag.Countries = countries;
+				ViewBag.Countries = countries.Select(temp =>
+				new SelectListItem() { Text = temp.CountryName, Value = temp.CountryID.ToString() }
+				);
 
 				ViewBag.Errors = ModelState.Values.SelectMany(value => value.Errors).Select(e => e.ErrorMessage).ToList();
 

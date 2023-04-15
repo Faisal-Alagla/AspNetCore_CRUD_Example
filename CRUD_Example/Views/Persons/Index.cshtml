@@ -3,12 +3,12 @@
 	ViewBag.Title = "Persons";
 }
 
-<form action="~/persons/index" method="get">
+<form asp-controller="Persons" asp-action="Index" method="get">
 	@*title*@
 	<h1>Persons</h1>
 
 	@*create person*@
-	<a href="~/persons/create">Create Person</a>
+	<a asp-controller="Persons" asp-action="Create">Create Person</a>
 
 	@*Search box*@
 	<div class="box flex">
@@ -35,7 +35,7 @@
 
 		<div class="flex-1">
 			<button class="button button-blue-back">Search</button>
-			<a href="~/persons/index" class="link-hover">Clear all</a>
+			<a asp-controller="Persons" asp-action="Index" class="link-hover">Clear all</a>
 		</div>
 	</div>
 
