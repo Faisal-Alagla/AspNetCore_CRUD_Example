@@ -1,5 +1,7 @@
 using ServiceContracts;
 using Services;
+using Microsoft.EntityFrameworkCore;
+using Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
@@ -7,6 +9,11 @@ builder.Services.AddControllersWithViews();
 //adding services into IoC container
 builder.Services.AddSingleton<ICountriesService, CountriesService>();
 builder.Services.AddSingleton<IPersonsService, PersonsService>();
+
+builder.Services.AddDbContext<PersonsDbContext>(options =>
+	{
+		options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+	});
 
 var app = builder.Build();
 
