@@ -10,95 +10,96 @@ namespace Services
 {
 	public class PersonsService : IPersonsService
 	{
-		private readonly List<Person> _persons;
+		//private readonly List<Person> _persons;
+		private readonly PersonsDbContext _db;
 		private readonly ICountriesService _countryService;
 
-		public PersonsService(bool initialize = true)
+		public PersonsService(PersonsDbContext personsDbContext, ICountriesService countriesService)
 		{
-			_persons = new List<Person>();
-			_countryService = new CountriesService();
+			_db = personsDbContext;
+			_countryService = countriesService;
 
 			//dummy data for testing
-			if (initialize)
-			{
-				_persons.Add(new Person
-				{
-					PersonID = Guid.Parse("0ED9DEE8-4EA4-4AF0-8B2A-94A9C1B1AA79"),
-					PersonName = "Maggy",
-					Email = "mdooler0@twitpic.com",
-					DateOfBirth = DateTime.Parse("5/10/1972"),
-					CountryID = Guid.Parse("9FCBFDF3-CDC0-4819-BD69-6F4664866792"),
-					Address = "800 Hudson Parkway",
-					Gender = "Female",
-					ReceiveNewsLetters = true,
-				});
-				_persons.Add(new Person
-				{
-					PersonID = Guid.Parse("9ADA7DEE-AB18-4C05-AAA9-9D10A342A940"),
-					PersonName = "Hurley",
-					Email = "holuby1@rakuten.co.jp",
-					DateOfBirth = DateTime.Parse("10/31/1983"),
-					CountryID = Guid.Parse("220E4ED1-E199-4A1F-B1C6-AD2A8569BF00"),
-					Address = "28657 Clemons Court",
-					Gender = "Male",
-					ReceiveNewsLetters = true,
-				});
-				_persons.Add(new Person
-				{
-					PersonID = Guid.Parse("9AE058BC-810F-4961-8BF9-0E5640151626"),
-					PersonName = "Adda",
-					Email = "asecret2@yahoo.co.jp",
-					DateOfBirth = DateTime.Parse("12/15/1985"),
-					CountryID = Guid.Parse("69CC1D32-28CC-42EA-8166-1AEFE5A90244"),
-					Address = "7466 Pawling Plaza",
-					Gender = "Female",
-					ReceiveNewsLetters = true,
-				});
-				_persons.Add(new Person
-				{
-					PersonID = Guid.Parse("D2E9DE3A-3105-4D97-80E2-C4EDEA23C837"),
-					PersonName = "Meagan",
-					Email = "mvanderlinde3@trellian.com",
-					DateOfBirth = DateTime.Parse("7/29/1992"),
-					CountryID = Guid.Parse("69CC1D32-28CC-42EA-8166-1AEFE5A90244"),
-					Address = "95631 Pierstorff Point",
-					Gender = "Female",
-					ReceiveNewsLetters = true,
-				});
-				_persons.Add(new Person
-				{
-					PersonID = Guid.Parse("DD9EE5F7-E25C-45EC-AD5D-D458D7E84684"),
-					PersonName = "Odell",
-					Email = "ostorrock6@t-online.de",
-					DateOfBirth = DateTime.Parse("5/20/1986"),
-					CountryID = Guid.Parse("8313AD55-0E9E-4ACE-900F-8E8F14338ECF"),
-					Address = "5 Onsgard Point",
-					Gender = "Male",
-					ReceiveNewsLetters = false,
-				});
-				_persons.Add(new Person
-				{
-					PersonID = Guid.Parse("D146FD10-4DB8-4C7E-AE1D-A1FC3F86FFD5"),
-					PersonName = "Thia",
-					Email = "tmocquer7@goo.gl",
-					DateOfBirth = DateTime.Parse("7/4/1992"),
-					CountryID = Guid.Parse("8313AD55-0E9E-4ACE-900F-8E8F14338ECF"),
-					Address = "9508 Little Fleur Park",
-					Gender = "Female",
-					ReceiveNewsLetters = false,
-				});
-				_persons.Add(new Person
-				{
-					PersonID = Guid.Parse("1A7630CB-7A87-447B-A3BC-BF69BC032014"),
-					PersonName = "Chelsae",
-					Email = "cbrenstuhl8@umich.edu",
-					DateOfBirth = DateTime.Parse("6/30/1984"),
-					CountryID = Guid.Parse("6D630EF4-73F7-43CA-99A6-E7B3C1E58D2E"),
-					Address = "0739 Valley Edge Avenue",
-					Gender = "Female",
-					ReceiveNewsLetters = true,
-				});
-			}
+			//if (initialize)
+			//{
+			//	_persons.Add(new Person
+			//	{
+			//		PersonID = Guid.Parse("0ED9DEE8-4EA4-4AF0-8B2A-94A9C1B1AA79"),
+			//		PersonName = "Maggy",
+			//		Email = "mdooler0@twitpic.com",
+			//		DateOfBirth = DateTime.Parse("5/10/1972"),
+			//		CountryID = Guid.Parse("9FCBFDF3-CDC0-4819-BD69-6F4664866792"),
+			//		Address = "800 Hudson Parkway",
+			//		Gender = "Female",
+			//		ReceiveNewsLetters = true,
+			//	});
+			//	_persons.Add(new Person
+			//	{
+			//		PersonID = Guid.Parse("9ADA7DEE-AB18-4C05-AAA9-9D10A342A940"),
+			//		PersonName = "Hurley",
+			//		Email = "holuby1@rakuten.co.jp",
+			//		DateOfBirth = DateTime.Parse("10/31/1983"),
+			//		CountryID = Guid.Parse("220E4ED1-E199-4A1F-B1C6-AD2A8569BF00"),
+			//		Address = "28657 Clemons Court",
+			//		Gender = "Male",
+			//		ReceiveNewsLetters = true,
+			//	});
+			//	_persons.Add(new Person
+			//	{
+			//		PersonID = Guid.Parse("9AE058BC-810F-4961-8BF9-0E5640151626"),
+			//		PersonName = "Adda",
+			//		Email = "asecret2@yahoo.co.jp",
+			//		DateOfBirth = DateTime.Parse("12/15/1985"),
+			//		CountryID = Guid.Parse("69CC1D32-28CC-42EA-8166-1AEFE5A90244"),
+			//		Address = "7466 Pawling Plaza",
+			//		Gender = "Female",
+			//		ReceiveNewsLetters = true,
+			//	});
+			//	_persons.Add(new Person
+			//	{
+			//		PersonID = Guid.Parse("D2E9DE3A-3105-4D97-80E2-C4EDEA23C837"),
+			//		PersonName = "Meagan",
+			//		Email = "mvanderlinde3@trellian.com",
+			//		DateOfBirth = DateTime.Parse("7/29/1992"),
+			//		CountryID = Guid.Parse("69CC1D32-28CC-42EA-8166-1AEFE5A90244"),
+			//		Address = "95631 Pierstorff Point",
+			//		Gender = "Female",
+			//		ReceiveNewsLetters = true,
+			//	});
+			//	_persons.Add(new Person
+			//	{
+			//		PersonID = Guid.Parse("DD9EE5F7-E25C-45EC-AD5D-D458D7E84684"),
+			//		PersonName = "Odell",
+			//		Email = "ostorrock6@t-online.de",
+			//		DateOfBirth = DateTime.Parse("5/20/1986"),
+			//		CountryID = Guid.Parse("8313AD55-0E9E-4ACE-900F-8E8F14338ECF"),
+			//		Address = "5 Onsgard Point",
+			//		Gender = "Male",
+			//		ReceiveNewsLetters = false,
+			//	});
+			//	_persons.Add(new Person
+			//	{
+			//		PersonID = Guid.Parse("D146FD10-4DB8-4C7E-AE1D-A1FC3F86FFD5"),
+			//		PersonName = "Thia",
+			//		Email = "tmocquer7@goo.gl",
+			//		DateOfBirth = DateTime.Parse("7/4/1992"),
+			//		CountryID = Guid.Parse("8313AD55-0E9E-4ACE-900F-8E8F14338ECF"),
+			//		Address = "9508 Little Fleur Park",
+			//		Gender = "Female",
+			//		ReceiveNewsLetters = false,
+			//	});
+			//	_persons.Add(new Person
+			//	{
+			//		PersonID = Guid.Parse("1A7630CB-7A87-447B-A3BC-BF69BC032014"),
+			//		PersonName = "Chelsae",
+			//		Email = "cbrenstuhl8@umich.edu",
+			//		DateOfBirth = DateTime.Parse("6/30/1984"),
+			//		CountryID = Guid.Parse("6D630EF4-73F7-43CA-99A6-E7B3C1E58D2E"),
+			//		Address = "0739 Valley Edge Avenue",
+			//		Gender = "Female",
+			//		ReceiveNewsLetters = true,
+			//	});
+			//}
 		}
 
 		//Helper method to convert a Person into PersonResponse type
@@ -127,21 +128,24 @@ namespace Services
 			person.PersonID = Guid.NewGuid();
 
 			//Add to the list of persons
-			_persons.Add(person);
+			_db.Persons.Add(person);
+			_db.SaveChanges();
 
 			return ConvertPersonToPersonResponse(person);
 		}
 
 		public List<PersonResponse> GetAllPersons()
 		{
-			return _persons.Select(person => ConvertPersonToPersonResponse(person)).ToList();
+			//return _persons.Select(person => ConvertPersonToPersonResponse(person)).ToList();
+			List<Person> persons = _db.Persons.ToList(); // SELECT * from persons (loading from DB to memory)
+			return persons.Select(person => ConvertPersonToPersonResponse(person)).ToList();
 		}
 
 		public PersonResponse? GetPersonByPersonID(Guid? personID)
 		{
 			if (personID == null) { return null; }
 
-			Person? person = _persons.FirstOrDefault(person => person.PersonID == personID);
+			Person? person = _db.Persons.FirstOrDefault(person => person.PersonID == personID);
 
 			if (person == null) { return null; }
 
@@ -237,7 +241,7 @@ namespace Services
 			ValidationHelper.ModelValidation(personUpdateRequest);
 
 			//get matching person object to update
-			Person matchingPerson = _persons.FirstOrDefault(temp => temp.PersonID == personUpdateRequest.PersonID) ?? throw new ArgumentException("Given PersonID doesn't exist");
+			Person matchingPerson = _db.Persons.FirstOrDefault(temp => temp.PersonID == personUpdateRequest.PersonID) ?? throw new ArgumentException("Given PersonID doesn't exist");
 
 			//update
 			matchingPerson.PersonName = personUpdateRequest.PersonName;
@@ -247,6 +251,9 @@ namespace Services
 			matchingPerson.Gender = personUpdateRequest.Gender.ToString();
 			matchingPerson.Address = personUpdateRequest.Address;
 			matchingPerson.ReceiveNewsLetters = personUpdateRequest.ReceiveNewsLetters;
+			//^^^ state: "Modified" ^^^
+
+			_db.SaveChanges(); //execute UPDATE
 
 			return ConvertPersonToPersonResponse(matchingPerson);
 		}
@@ -255,11 +262,13 @@ namespace Services
 		{
 			if (personID == null) { throw new ArgumentNullException(nameof(personID)); }
 
-			Person? person = _persons.FirstOrDefault(temp => temp.PersonID == personID);
+			Person? person = _db.Persons.FirstOrDefault(temp => temp.PersonID == personID);
 
 			if (person == null) { return false; }
 
-			_persons.RemoveAll(temp => temp.PersonID == personID);
+			//_persons.RemoveAll(temp => temp.PersonID == personID);
+			_db.Persons.Remove(_db.Persons.First(temp => temp.PersonID == personID)); //state: "Removed"
+			_db.SaveChanges(); //execute DELETE
 
 			return true;
 		}
