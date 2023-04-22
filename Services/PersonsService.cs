@@ -137,8 +137,12 @@ namespace Services
 		public List<PersonResponse> GetAllPersons()
 		{
 			//return _persons.Select(person => ConvertPersonToPersonResponse(person)).ToList();
-			List<Person> persons = _db.Persons.ToList(); // SELECT * from persons (loading from DB to memory)
-			return persons.Select(person => ConvertPersonToPersonResponse(person)).ToList();
+
+			//List<Person> persons = _db.Persons.ToList(); // SELECT * from persons (loading from DB to memory)
+			//return persons.Select(person => ConvertPersonToPersonResponse(person)).ToList();
+
+			//using a stored procedure
+			return _db.sp_GetAllPersons().Select(temp => ConvertPersonToPersonResponse(temp)).ToList();
 		}
 
 		public PersonResponse? GetPersonByPersonID(Guid? personID)

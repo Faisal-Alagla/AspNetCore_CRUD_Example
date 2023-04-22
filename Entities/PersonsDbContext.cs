@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace Entities
 {
@@ -34,6 +35,12 @@ namespace Entities
 			{
 				modelBuilder.Entity<Person>().HasData(person);
 			}
+		}
+
+		public List<Person> sp_GetAllPersons()
+		{
+			//IQueryable<Person>
+			return Persons.FromSqlRaw("EXECUTE [dbo].[GetAllPersons]").ToList();
 		}
 	}
 }

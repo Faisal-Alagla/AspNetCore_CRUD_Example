@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using Services;
 
 namespace CRUD_Tests
 {
-    public class CountriesServiceTest
+	public class CountriesServiceTest
 	{
 		private readonly ICountriesService _countriesService;
 
 		public CountriesServiceTest()
 		{
-			_countriesService = new CountriesService(false);
+			_countriesService = new CountriesService(new PersonsDbContext(new DbContextOptionsBuilder<PersonsDbContext>().Options));
 		}
 
 		#region AddCountry
@@ -95,7 +96,7 @@ namespace CRUD_Tests
 
 		//
 		[Fact]
-		public void GetAllCountries_AddFewCountries() 
+		public void GetAllCountries_AddFewCountries()
 		{
 			//Arrange
 			List<CountryAddRequest> country_request_list = new List<CountryAddRequest>()
