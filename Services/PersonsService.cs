@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using Entities;
 using ServiceContracts;
 using ServiceContracts.DTO;
@@ -130,6 +129,7 @@ namespace Services
 			//Add to the list of persons
 			_db.Persons.Add(person);
 			_db.SaveChanges();
+			//_db.sp_InsertPerson(person);
 
 			return ConvertPersonToPersonResponse(person);
 		}
@@ -138,11 +138,12 @@ namespace Services
 		{
 			//return _persons.Select(person => ConvertPersonToPersonResponse(person)).ToList();
 
-			//List<Person> persons = _db.Persons.ToList(); // SELECT * from persons (loading from DB to memory)
-			//return persons.Select(person => ConvertPersonToPersonResponse(person)).ToList();
+			List<Person> persons = _db.Persons.ToList(); // SELECT * from persons (loading from DB to memory)
+			return persons.Select(person => ConvertPersonToPersonResponse(person)).ToList();
 
 			//using a stored procedure
-			return _db.sp_GetAllPersons().Select(temp => ConvertPersonToPersonResponse(temp)).ToList();
+			//return _db.sp_GetAllPersons().Select(temp => ConvertPersonToPersonResponse(temp)).ToList();
+			//^^^ To use this: need to update the stored procedure to include the new TIN column.. lec.209 ^^^
 		}
 
 		public PersonResponse? GetPersonByPersonID(Guid? personID)
