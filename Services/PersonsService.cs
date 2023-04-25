@@ -1,5 +1,6 @@
 ﻿using System;
 using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
@@ -101,14 +102,6 @@ namespace Services
 			//}
 		}
 
-		//Helper method to convert a Person into PersonResponse type
-		private PersonResponse ConvertPersonToPersonResponse(Person person)
-		{
-			PersonResponse personResponse = person.ToPersonResponse();
-			personResponse.Country = _countryService.GetCountryByCountryID(person.CountryID)?.CountryName;
-			return personResponse;
-		}
-
 		public PersonResponse AddPerson(PersonAddRequest? personAddRequest)
 		{
 			//Validation: personAddRequest parameter can't be null
@@ -131,15 +124,16 @@ namespace Services
 			_db.SaveChanges();
 			//_db.sp_InsertPerson(person);
 
-			return ConvertPersonToPersonResponse(person);
+			return person.ToPersonResponse();
 		}
 
 		public List<PersonResponse> GetAllPersons()
 		{
 			//return _persons.Select(person => ConvertPersonToPersonResponse(person)).ToList();
 
-			List<Person> persons = _db.Persons.ToList(); // SELECT * from persons (loading from DB to memory)
-			return persons.Select(person => ConvertPersonToPersonResponse(person)).ToList();
+			//Include -> navigation property (instead of joints)
+			List<Person> persons = _db.Persons.Include("Country").ToList(); // SELECT * from persons (loading from DB to memory)
+			return persons.Select(person => person.ToPersonResponse()).ToList();
 
 			//using a stored procedure
 			//return _db.sp_GetAllPersons().Select(temp => ConvertPersonToPersonResponse(temp)).ToList();
@@ -150,7 +144,9 @@ namespace Services
 		{
 			if (personID == null) { return null; }
 
-			Person? person = _db.Persons.FirstOrDefault(person => person.PersonID == personID);
+			Person? person = _db.Persons.Include("Country").FirstOrDefault(person => person.PersonID == personID);
+			//now it's possible to access this person's country object
+			//person.Country.CountryName;
 
 			if (person == null) { return null; }
 
@@ -260,7 +256,7 @@ namespace Services
 
 			_db.SaveChanges(); //execute UPDATE
 
-			return ConvertPersonToPersonResponse(matchingPerson);
+			return matchingPerson.ToPersonResponse();
 		}
 
 		public bool DeletePerson(Guid? personID)

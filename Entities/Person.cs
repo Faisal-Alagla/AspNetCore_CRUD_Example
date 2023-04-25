@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities
 {
@@ -24,5 +25,8 @@ namespace Entities
 
 		//check fluent api in DBContext
 		public string? TIN { get; set; }
+
+		[ForeignKey("CountryID")]
+		public Country? Country { get; set; }
 	}
 }

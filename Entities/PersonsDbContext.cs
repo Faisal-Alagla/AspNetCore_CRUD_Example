@@ -48,6 +48,16 @@ namespace Entities
 
 			//adding a constraint
 			modelBuilder.Entity<Person>().HasCheckConstraint("CHK_TIN", "len([TaxIdentificationNumber]) = 8");
+
+			//Table relations
+			/*
+			modelBuilder.Entity<Person>(entity =>
+			{
+				//Every country has a set of persons
+				entity.HasOne<Country>(c => c.Country).WithMany(p => p.Persons).HasForeignKey(p => p.CountryID);
+			});
+			*/
+			//^^^ Can do [Forenkey] in entity instead
 		}
 
 		public List<Person> sp_GetAllPersons()
