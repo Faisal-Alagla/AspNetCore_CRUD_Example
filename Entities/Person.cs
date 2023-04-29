@@ -26,7 +26,7 @@ namespace Entities
 		//check fluent api in DBContext
 		public string? TIN { get; set; }
 
-		[ForeignKey("CountryID")]
+		[ForeignKey("CountryID")] //instead of the table table relations in DBContext (commented)
 		public virtual Country? Country { get; set; }
 	}
 }
