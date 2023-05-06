@@ -1,10 +1,14 @@
 ﻿using System;
+using CsvHelper;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using Services.Helpers;
+using System.Globalization;
+using CsvHelper.Configuration;
+using OfficeOpenXml;
 
 namespace Services
 {
@@ -272,6 +276,91 @@ namespace Services
 			await _db.SaveChangesAsync(); //execute DELETE
 
 			return true;
+		}
+
+		public async Task<MemoryStream> GetPersonsCSV()
+		{
+			MemoryStream memoryStream = new MemoryStream();
+			StreamWriter streamWriter = new StreamWriter(memoryStream);
+
+			//problem with below commented code is that we can't control which properties to include (all properties)
+			//this will help us customize the csv file
+			CsvConfiguration csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture);
+			CsvWriter csvWriter = new CsvWriter(streamWriter, csvConfiguration);
+
+			//PersonName,Email,DateOfBirth,Country
+			csvWriter.WriteField(nameof(PersonResponse.PersonName));
+			csvWriter.WriteField(nameof(PersonResponse.Email));
+			csvWriter.WriteField(nameof(PersonResponse.DateOfBirth));
+			csvWriter.WriteField(nameof(PersonResponse.Country));
+
+			//CsvWriter comes form CsvHelper package
+			//lec. 217... 218 = more methods
+			//CsvWriter csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture, leaveOpen: true);
+
+			//csvWriter.WriteHeader<PersonResponse>(); //PersonID,PersonName,...
+			csvWriter.NextRecord(); // \n
+
+			List<PersonResponse> persons = _db.Persons.Include("Country").Select(temp => temp.ToPersonResponse()).ToList();
+
+			foreach (PersonResponse person in persons)
+			{
+				csvWriter.WriteField(person.PersonName);
+				csvWriter.WriteField(person.Email);
+				if (person.DateOfBirth.HasValue) { csvWriter.WriteField(person.DateOfBirth.Value.ToString("yyyy-MM-dd")); }
+				csvWriter.WriteField(person.Country);
+
+				csvWriter.NextRecord();
+				csvWriter.Flush();
+			}
+			//await csvWriter.WriteRecordsAsync(persons); //1,abc,...
+
+			memoryStream.Position = 0;
+			return memoryStream;
+		}
+
+		public async Task<MemoryStream> GetPersonsExcel()
+		{
+			MemoryStream memoryStream = new MemoryStream();
+			//from EPPlus package..
+			using (ExcelPackage excelPackage = new ExcelPackage(memoryStream))
+			{
+				ExcelWorksheet workSheet = excelPackage.Workbook.Worksheets.Add("PersonsSheet");
+				workSheet.Cells["A1"].Value = "Person Name";
+				workSheet.Cells["B1"].Value = "Person Email";
+				workSheet.Cells["C1"].Value = "Date of Birth";
+				workSheet.Cells["D1"].Value = "Country";
+
+				int row = 2;
+				List<PersonResponse> persons = _db.Persons.Include("Country").Select(temp => temp.ToPersonResponse()).ToList();
+
+				foreach (PersonResponse person in persons)
+				{
+					//[row, column]
+					workSheet.Cells[row, 1].Value = person.PersonName;
+					workSheet.Cells[row, 2].Value = person.Email;
+					if (person.DateOfBirth != null) { workSheet.Cells[row, 3].Value = person.DateOfBirth.Value.ToString("yyyy-MM-dd"); }
+					workSheet.Cells[row, 4].Value = person.Country;
+
+					//formatting header cells
+					using (ExcelRange headerCells = workSheet.Cells["A1,D1"])
+					{
+						headerCells.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+						headerCells.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+						headerCells.Style.Font.Bold = true;
+					}
+
+					row++;
+				}
+				//### google epplus for documentation (more features etc...) ###
+
+				workSheet.Cells[$"A1:D{row}"].AutoFitColumns();
+
+				await excelPackage.SaveAsync();
+			}
+
+			memoryStream.Position = 0;
+			return memoryStream;
 		}
 	}
 }

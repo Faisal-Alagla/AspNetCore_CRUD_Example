@@ -8,10 +8,16 @@
 	<h1>Persons</h1>
 
 	@*create person*@
-	<a asp-controller="Persons" asp-action="Create">Create Person</a>
+	<a class="ml" asp-controller="Persons" asp-action="Create">Create Person</a>
 
 	@*Generate PDF*@
-	<a asp-controller="Persons" asp-action="PersonsPDF">Download as PDF</a>
+	<a class="ml" asp-controller="Persons" asp-action="PersonsPDF">Download as PDF</a>
+
+	@*Generate CSV*@
+	<a class="ml" asp-controller="Persons" asp-action="PersonsCSV">Download as CSV</a>
+
+	@*Generate Excel*@
+	<a class="ml" asp-controller="Persons" asp-action="PersonsExcel">Download as Excel</a>
 
 	@*Search box*@
 	<div class="box flex">
