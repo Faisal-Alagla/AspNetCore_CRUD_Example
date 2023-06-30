@@ -7,6 +7,8 @@ using Services;
 using ServiceContracts.Enums;
 using Xunit.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using EntityFrameworkCoreMock;
+using Moq;
 
 namespace Tests_Example
 {
@@ -18,8 +20,20 @@ namespace Tests_Example
 
 		public PersonsServiceTest(ITestOutputHelper testOutputHelper)
 		{
-			_countriesService = new CountriesService(new PersonsDbContext(new DbContextOptionsBuilder<PersonsDbContext>().Options));
-			_personService = new PersonsService(new PersonsDbContext(new DbContextOptionsBuilder<PersonsDbContext>().Options), _countriesService);
+			var countriesItitalData = new List<Country>();
+			var personsInitialData  = new List<Person>();
+
+			DbContextMock<ApplicationDbContext> dbContextMock = new DbContextMock<ApplicationDbContext>(
+				new DbContextOptionsBuilder<ApplicationDbContext>().Options
+			);
+
+			ApplicationDbContext dbContext = dbContextMock.Object;
+			dbContextMock.CreateDbSetMock(temp => temp.Countries, countriesItitalData);
+			dbContextMock.CreateDbSetMock(temp => temp.Persons, personsInitialData);
+
+			_countriesService = new CountriesService(dbContext);
+			_personService = new PersonsService(dbContext, _countriesService);
+
 			_testOutputHelper = testOutputHelper;
 		}
 
