@@ -36,8 +36,8 @@ namespace Tests_Example
 			dbContextMock.CreateDbSetMock(temp => temp.Countries, countriesItitalData);
 			dbContextMock.CreateDbSetMock(temp => temp.Persons, personsInitialData);
 
-			_countriesService = new CountriesService(dbContext);
-			_personService = new PersonsService(dbContext, _countriesService);
+			_countriesService = new CountriesService(null);
+			_personService = new PersonsService(null);
 
 			_testOutputHelper = testOutputHelper;
 		}
