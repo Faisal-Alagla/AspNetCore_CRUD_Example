@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Entities;
+﻿using Entities;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;

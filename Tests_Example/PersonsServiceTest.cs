@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Entities;
+﻿using Entities;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using Services;
 using ServiceContracts.Enums;
 using Xunit.Abstractions;
-using Microsoft.EntityFrameworkCore;
-using EntityFrameworkCoreMock;
 using AutoFixture;
 using FluentAssertions;
 using RepositoryContracts;
