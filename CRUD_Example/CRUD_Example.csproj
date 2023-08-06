@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
 
+	<!--giving permission to the test project to access the automatically generated classes of this project-->
+	<ItemGroup>
+		<InternalsVisibleTo Include="Tests_Example "/>
+	</ItemGroup>
 </Project>

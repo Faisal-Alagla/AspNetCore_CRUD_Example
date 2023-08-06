@@ -26,10 +26,17 @@ if (builder.Environment.IsDevelopment())
 	app.UseDeveloperExceptionPage();
 }
 
-Rotativa.AspNetCore.RotativaConfiguration.Setup("wwwroot", wkhtmltopdfRelativePath: "Rotativa");
+if (!builder.Environment.IsEnvironment("Test"))
+{
+	Rotativa.AspNetCore.RotativaConfiguration.Setup("wwwroot", wkhtmltopdfRelativePath: "Rotativa");
+}
 
 app.UseStaticFiles();
 app.UseRouting();
 app.MapControllers();
 
 app.Run();
+
+//making it partial so that we can access the program class anywhwere in the application (e.g. integration tests)
+//+ have to change csproj file so that it's available in other projects within the same solution (edit project file)
+public partial class Program { }
