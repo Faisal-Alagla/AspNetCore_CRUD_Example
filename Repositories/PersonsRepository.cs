@@ -13,6 +13,7 @@ namespace Repositories
 		{
 			_db = db;
 		}
+
 		public async Task<Person> AddPerson(Person person)
 		{
 			_db.Persons.Add(person);
