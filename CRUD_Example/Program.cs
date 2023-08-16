@@ -8,6 +8,15 @@ using Repositories;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
+//logging
+builder.Host.ConfigureLogging(loggingProvider =>
+{
+	loggingProvider.ClearProviders();
+	loggingProvider.AddConsole();
+	loggingProvider.AddDebug();
+	loggingProvider.AddEventLog();
+});
+
 //adding services into IoC container
 builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
 builder.Services.AddScoped<IPersonsRepository, PersonsRepository>();
