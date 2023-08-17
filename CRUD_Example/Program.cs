@@ -17,6 +17,13 @@ builder.Host.ConfigureLogging(loggingProvider =>
 	loggingProvider.AddEventLog();
 });
 
+builder.Services.AddHttpLogging(options =>
+{
+	//http logging options here
+	options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestProperties;
+	options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponsePropertiesAndHeaders;
+});
+
 //adding services into IoC container
 builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
 builder.Services.AddScoped<IPersonsRepository, PersonsRepository>();
@@ -28,6 +35,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 		options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 	});
 
+//build
 var app = builder.Build();
 
 if (builder.Environment.IsDevelopment())
@@ -40,6 +48,7 @@ if (!builder.Environment.IsEnvironment("Test"))
 	Rotativa.AspNetCore.RotativaConfiguration.Setup("wwwroot", wkhtmltopdfRelativePath: "Rotativa");
 }
 
+app.UseHttpLogging();
 app.UseStaticFiles();
 app.UseRouting();
 app.MapControllers();
