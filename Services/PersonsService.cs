@@ -8,6 +8,7 @@ using System.Globalization;
 using CsvHelper.Configuration;
 using OfficeOpenXml;
 using RepositoryContracts;
+using Microsoft.Extensions.Logging;
 
 namespace Services
 {
@@ -15,10 +16,12 @@ namespace Services
 	{
 		//private readonly List<Person> _persons;
 		private readonly IPersonsRepository _personsRepository;
+		private readonly ILogger<PersonsService> _logger;
 
-		public PersonsService(IPersonsRepository personsRepository)
+		public PersonsService(IPersonsRepository personsRepository, ILogger<PersonsService> logger)
 		{
 			_personsRepository = personsRepository;
+			_logger = logger;
 		}
 
 		public async Task<PersonResponse> AddPerson(PersonAddRequest? personAddRequest)
@@ -46,6 +49,8 @@ namespace Services
 
 		public async Task<List<PersonResponse>> GetAllPersons()
 		{
+			_logger.LogInformation("GetAllPersons of PersonsService");
+
 			//return _persons.Select(person => ConvertPersonToPersonResponse(person)).ToList();
 
 			//Include -> navigation property (instead of joints)
@@ -72,7 +77,9 @@ namespace Services
 
 		public async Task<List<PersonResponse>> GetFilteredPersons(string searchBy, string? searchString)
 		{
-			List<Person> persons = searchBy switch
+            _logger.LogInformation("GetFilteredPersons of PersonsService");
+
+            List<Person> persons = searchBy switch
 			{
 				nameof(PersonResponse.PersonName) =>
 					await _personsRepository.GetFilteredPersons(temp =>
@@ -106,7 +113,9 @@ namespace Services
 
 		public async Task<List<PersonResponse>> GetSortedPersons(List<PersonResponse> allPersons, string sortBy, SortOrderOptions sortOrder)
 		{
-			if (string.IsNullOrEmpty(sortBy)) { return allPersons; }
+            _logger.LogInformation("GetSortedPersons of PersonsService");
+
+            if (string.IsNullOrEmpty(sortBy)) { return allPersons; }
 
 			//Note: can use reflection instead of this
 			List<PersonResponse> sortedPersons = (sortBy, sortOrder) switch
