@@ -27,5 +27,10 @@ namespace Entities
 
 		[ForeignKey("CountryID")] //instead of the table table relations in DBContext (commented)
 		public virtual Country? Country { get; set; }
-	}
+
+        public override string ToString()
+        {
+			return $"Person ID: {PersonID}, Person Name: {PersonName}, Email: {Email}";
+        }
+    }
 }

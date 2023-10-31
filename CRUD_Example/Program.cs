@@ -37,6 +37,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //build
 var app = builder.Build();
 
+app.UseSerilogRequestLogging();
+
 if (builder.Environment.IsDevelopment())
 {
 	app.UseDeveloperExceptionPage();
