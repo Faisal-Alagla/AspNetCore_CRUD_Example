@@ -25,6 +25,7 @@ namespace CRUD_Example.Controllers
         [Route("[action]")] //persons/index
         [Route("/")]
         [TypeFilter(typeof(PersonsListActionFilter))]
+        [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Custom-Key", "Custom-Value" })]
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
             _logger.LogInformation("Index action method of PersonsController");
@@ -61,6 +62,7 @@ namespace CRUD_Example.Controllers
 
         [Route("[action]")] //persons/create
         [HttpGet] // receives only GET requests (view the form)
+        [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "my-key", "my-value" })]
         public async Task<IActionResult> Create()
         {
             List<CountryResponse> countries = await _countriesService.GetAllCountries();
