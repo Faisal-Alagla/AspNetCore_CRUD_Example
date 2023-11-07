@@ -9,6 +9,7 @@ using ServiceContracts.Enums;
 namespace CRUD_Example.Controllers
 {
     [Route("[controller]")] //persons
+    [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "Controller-Key", "Controller-Value" })]
     public class PersonsController : Controller
     {
         private readonly IPersonsService _personsService;
