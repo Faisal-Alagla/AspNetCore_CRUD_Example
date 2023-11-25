@@ -12,11 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews(options =>
 {
     //adding a global filter
-    //options.Filters.Add<ResponseHeaderActionFilter>();
+    //if we're not supplying any parameters to the filter class, we can use this and provide the order as following
+    //options.Filters.Add<ResponseHeaderActionFilter>(5);
 
     var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
 
-    options.Filters.Add(new ResponseHeaderActionFilter(logger, "Some-Key", "Some-Value"));
+    //order = 2 (IOrderedFilter)
+    options.Filters.Add(new ResponseHeaderActionFilter(logger, "Some-Key", "Some-Value", 2));
 });
 
 //logging with serilog
