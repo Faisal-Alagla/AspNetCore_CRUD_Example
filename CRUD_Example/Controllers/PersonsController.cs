@@ -1,5 +1,6 @@
 ﻿using CRUD_Example.Filters.ActionFilters;
 using CRUD_Example.Filters.AuthorizationFilters;
+using CRUD_Example.Filters.ExceptionFilters;
 using CRUD_Example.Filters.ResourceFilters;
 using CRUD_Example.Filters.ResultFilters;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ namespace CRUD_Example.Controllers
 {
     [Route("[controller]")] //persons
     [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "Controller-Key", "Controller-Value", 3 }, Order = 3)]
+    [TypeFilter(typeof(HandleExceptionFilter))]
     public class PersonsController : Controller
     {
         private readonly IPersonsService _personsService;
