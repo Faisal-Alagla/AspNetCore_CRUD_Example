@@ -1,4 +1,5 @@
 ﻿using CRUD_Example.Filters.ActionFilters;
+using CRUD_Example.Filters.ResourceFilters;
 using CRUD_Example.Filters.ResultFilters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -79,6 +80,7 @@ namespace CRUD_Example.Controllers
         [Route("[action]")] //persons/create
         [HttpPost] // post request for form submission
         [TypeFilter(typeof(PersonCreateAndEditPostActionFilter))]
+        [TypeFilter(typeof(FeatureDisabledResourceFilter), Arguments = new object[] { false })]
         public async Task<IActionResult> Create(PersonAddRequest personRequest)
         {
             //In case of errors, return to the view with the error messages
