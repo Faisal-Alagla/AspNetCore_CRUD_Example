@@ -6,7 +6,6 @@ using RepositoryContracts;
 using Repositories;
 using Serilog;
 using CRUD_Example.Filters.ActionFilters;
-using CRUD_Example.Filters.ResultFilters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,10 +15,10 @@ builder.Services.AddControllersWithViews(options =>
     //if we're not supplying any parameters to the filter class, we can use this and provide the order as following
     //options.Filters.Add<ResponseHeaderActionFilter>(5);
 
-    var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
+    //var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
 
     //order = 2 (IOrderedFilter)
-    options.Filters.Add(new ResponseHeaderActionFilter(logger, "Some-Key", "Some-Value", 2));
+    options.Filters.Add(new ResponseHeaderActionFilter(/*logger,*/ "Some-Key", "Some-Value", 2));
 });
 
 //logging with serilog

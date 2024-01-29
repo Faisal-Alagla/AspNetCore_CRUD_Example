@@ -14,7 +14,8 @@ using ServiceContracts.Enums;
 namespace CRUD_Example.Controllers
 {
     [Route("[controller]")] //persons
-    [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "Controller-Key", "Controller-Value", 3 }, Order = 3)]
+    //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "Controller-Key", "Controller-Value", 3 }, Order = 3)]
+    [ResponseHeaderActionFilter("Controller-Key", "Controller-Value", 3)] //Filter Attribute
     [TypeFilter(typeof(HandleExceptionFilter))]
     [TypeFilter(typeof(PersonsAlwaysRunResultFilter))]
     public class PersonsController : Controller
@@ -35,7 +36,8 @@ namespace CRUD_Example.Controllers
         [TypeFilter(typeof(PersonsListActionFilter), Order = 4)]
         //Order: to manipulate the order of execution sequence of filters (lec. Custom order of filters)
         //preferred way is to implement IOrderedFilter in filter class and provide it as argument (lec. IOrderedFilter)
-        [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Custom-Key", "Custom-Value", 1 }, Order = 1)]
+        //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Custom-Key", "Custom-Value", 1 }, Order = 1)]
+        [ResponseHeaderActionFilter("Controller-Key", "Controller-Value", 1)] //Filter Attribute
         [TypeFilter(typeof(PersonsListResultFilter))]
         [SkipFilter] //check PersonsAlwaysRunResultFilter
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortOrderOptions sortOrder = SortOrderOptions.ASC)
@@ -74,7 +76,8 @@ namespace CRUD_Example.Controllers
 
         [Route("[action]")] //persons/create
         [HttpGet] // receives only GET requests (view the form)
-        [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "my-key", "my-value", 4 })]
+        //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "my-key", "my-value", 4 })]
+        [ResponseHeaderActionFilter("Controller-Key", "Controller-Value", 4)] //Filter Attribute
         public async Task<IActionResult> Create()
         {
             List<CountryResponse> countries = await _countriesService.GetAllCountries();
