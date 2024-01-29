@@ -1,4 +1,5 @@
-﻿using CRUD_Example.Filters.ActionFilters;
+﻿using CRUD_Example.Filters;
+using CRUD_Example.Filters.ActionFilters;
 using CRUD_Example.Filters.AuthorizationFilters;
 using CRUD_Example.Filters.ExceptionFilters;
 using CRUD_Example.Filters.ResourceFilters;
@@ -15,6 +16,7 @@ namespace CRUD_Example.Controllers
     [Route("[controller]")] //persons
     [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "Controller-Key", "Controller-Value", 3 }, Order = 3)]
     [TypeFilter(typeof(HandleExceptionFilter))]
+    [TypeFilter(typeof(PersonsAlwaysRunResultFilter))]
     public class PersonsController : Controller
     {
         private readonly IPersonsService _personsService;
@@ -35,6 +37,7 @@ namespace CRUD_Example.Controllers
         //preferred way is to implement IOrderedFilter in filter class and provide it as argument (lec. IOrderedFilter)
         [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Custom-Key", "Custom-Value", 1 }, Order = 1)]
         [TypeFilter(typeof(PersonsListResultFilter))]
+        [SkipFilter] //check PersonsAlwaysRunResultFilter
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
             _logger.LogInformation("Index action method of PersonsController");
@@ -132,7 +135,6 @@ namespace CRUD_Example.Controllers
         [HttpPost]
         [TypeFilter(typeof(PersonCreateAndEditPostActionFilter))]
         [TypeFilter(typeof(TokenAuthorizationFilter))]
-        [TypeFilter(typeof(PersonsAlwaysRunResultFilter))]
         public async Task<IActionResult> Edit(PersonUpdateRequest personRequest)
         {
             PersonResponse? personResponse = await _personsService.GetPersonByPersonID(personRequest.PersonID);

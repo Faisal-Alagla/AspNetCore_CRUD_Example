@@ -14,6 +14,11 @@ namespace CRUD_Example.Filters.ResultFilters
 
         public void OnResultExecuting(ResultExecutingContext context)
         {
+            //Make it so that when the skip filter is applied, this filter is skipped
+            if (context.Filters.OfType<SkipFilter>().Any())
+            {
+                return;
+            }
         }
     }
 }
