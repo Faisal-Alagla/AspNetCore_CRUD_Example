@@ -38,7 +38,8 @@ namespace CRUD_Example.Controllers
         //preferred way is to implement IOrderedFilter in filter class and provide it as argument (lec. IOrderedFilter)
         //[TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Custom-Key", "Custom-Value", 1 }, Order = 1)]
         [ResponseHeaderActionFilter("Controller-Key", "Controller-Value", 1)] //Filter Attribute
-        [TypeFilter(typeof(PersonsListResultFilter))]
+        //[TypeFilter(typeof(PersonsListResultFilter))]
+        [PersonsListFilterFactory("some property value", 2)] //Attribute filter with arguments & DI (IFilterFactory)
         [SkipFilter] //check PersonsAlwaysRunResultFilter
         public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {

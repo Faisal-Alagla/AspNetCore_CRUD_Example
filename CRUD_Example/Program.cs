@@ -6,6 +6,7 @@ using RepositoryContracts;
 using Repositories;
 using Serilog;
 using CRUD_Example.Filters.ActionFilters;
+using CRUD_Example.Filters.ResultFilters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //In case of using ServiceFilter instead of TypeFilter
 //Here can decide transient / scoped / singleton.. TypeFilter is Transient by default
 //builder.Services.AddTransient<TokenResultFilter>();
+
+//Have to do this for IFilterFactory (check its file)
+builder.Services.AddTransient<PersonsListResultFilter>();
 
 //build
 var app = builder.Build();
