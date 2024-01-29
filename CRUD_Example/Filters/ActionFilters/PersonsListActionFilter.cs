@@ -1,6 +1,7 @@
 ﻿using CRUD_Example.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ServiceContracts.DTO;
+using ServiceContracts.Enums;
 
 namespace CRUD_Example.Filters.ActionFilters
 {
@@ -37,10 +38,18 @@ namespace CRUD_Example.Filters.ActionFilters
                 {
                     personsController.ViewBag["CurrentSortBy"] = Convert.ToString(parameters["CurrentSortBy"]);
                 }
+                else
+                {
+                    personsController.ViewBag["CurrentSortBy"] = nameof(PersonResponse.PersonName);
+                }
 
                 if (parameters.ContainsKey("CurrentSortOrder"))
                 {
                     personsController.ViewBag["CurrentSortOrder"] = Convert.ToString(parameters["CurrentSortOrder"]);
+                }
+                else
+                {
+                    personsController.ViewBag["CurrentSortOrder"] = nameof(SortOrderOptions.ASC);
                 }
             }
 
