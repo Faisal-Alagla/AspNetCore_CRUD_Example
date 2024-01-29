@@ -1,12 +1,6 @@
-using ServiceContracts;
-using Services;
-using Microsoft.EntityFrameworkCore;
-using Entities;
-using RepositoryContracts;
-using Repositories;
 using Serilog;
 using CRUD_Example.Filters.ActionFilters;
-using CRUD_Example.Filters.ResultFilters;
+using CRUD_Example;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,30 +23,33 @@ builder.Host.UseSerilog((HostBuilderContext context, IServiceProvider services, 
     .ReadFrom.Services(services); //reads the services and makes them available to the serilog
 });
 
-builder.Services.AddHttpLogging(options =>
-{
-    //http logging options here
-    options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestProperties;
-    options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponsePropertiesAndHeaders;
-});
+builder.Services.ConfigureServices(builder.Configuration); //this contains all the commented services below (check StartupExtensions)
 
-//adding services into IoC container
-builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
-builder.Services.AddScoped<IPersonsRepository, PersonsRepository>();
-builder.Services.AddScoped<ICountriesService, CountriesService>();
-builder.Services.AddScoped<IPersonsService, PersonsService>();
+//builder.Services.AddHttpLogging(options =>
+//{
+//    //http logging options here
+//    options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestProperties;
+//    options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponsePropertiesAndHeaders;
+//});
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    {
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-    });
+////Configure services extension
+////adding services into IoC container
+//builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
+//builder.Services.AddScoped<IPersonsRepository, PersonsRepository>();
+//builder.Services.AddScoped<ICountriesService, CountriesService>();
+//builder.Services.AddScoped<IPersonsService, PersonsService>();
 
-//In case of using ServiceFilter instead of TypeFilter
-//Here can decide transient / scoped / singleton.. TypeFilter is Transient by default
-//builder.Services.AddTransient<TokenResultFilter>();
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    {
+//        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+//    });
 
-//Have to do this for IFilterFactory (check its file)
-builder.Services.AddTransient<PersonsListResultFilter>();
+////In case of using ServiceFilter instead of TypeFilter
+////Here can decide transient / scoped / singleton.. TypeFilter is Transient by default
+////builder.Services.AddTransient<TokenResultFilter>();
+
+////Have to do this for IFilterFactory (check its file)
+//builder.Services.AddTransient<PersonsListResultFilter>();
 
 //build
 var app = builder.Build();
