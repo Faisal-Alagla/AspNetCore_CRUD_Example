@@ -114,6 +114,9 @@ namespace CRUD_Example.Controllers
         [Route("[action]/{personID}")]
         [HttpGet]
         [TypeFilter(typeof(TokenResultFilter))]
+        //[ServiceFilter(typeof(TokenResultFilter))]
+        //ServiceFilter is the same as TypeFilter, except that it can't accept Arguments
+        //but it has to be added as a service to the IOC containter (program.cs)
         public async Task<IActionResult> Edit(Guid? personID)
         {
             PersonResponse? personResponse = await _personsService.GetPersonByPersonID(personID);
