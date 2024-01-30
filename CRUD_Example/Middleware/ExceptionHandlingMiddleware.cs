@@ -33,8 +33,10 @@ namespace CRUD_Example.Middleware
                     _logger.LogError("{ExceptionType} {ExceptionMessage}", ex.GetType().ToString(), ex.Message);
                 }
 
-                httpContext.Response.StatusCode = 500;
-                await httpContext.Response.WriteAsync("Some error occurred");
+                //httpContext.Response.StatusCode = 500;
+                //await httpContext.Response.WriteAsync("Some error occurred");
+
+                throw;
             }
         }
     }

@@ -63,6 +63,9 @@ if (builder.Environment.IsDevelopment())
 }
 else
 {
+    //For redirection to specific route in case of exceptions. here redirecting to /Error
+    app.UseExceptionHandler("/Error");
+
     //in other environments we use our custom exception handling middleware (in Middleware file)
     app.UseExceptionHandlingMiddleware();
 }
