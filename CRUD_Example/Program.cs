@@ -1,6 +1,7 @@
 using Serilog;
 using CRUD_Example.Filters.ActionFilters;
 using CRUD_Example;
+using CRUD_Example.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +60,11 @@ app.UseSerilogRequestLogging();
 if (builder.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+}
+else
+{
+    //in other environments we use our custom exception handling middleware (in Middleware file)
+    app.UseExceptionHandlingMiddleware();
 }
 
 if (!builder.Environment.IsEnvironment("Test"))
