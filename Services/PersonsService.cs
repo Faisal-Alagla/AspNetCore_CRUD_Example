@@ -11,6 +11,7 @@ using RepositoryContracts;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using SerilogTimings;
+using Exceptions;
 
 namespace Services
 {
@@ -160,7 +161,7 @@ namespace Services
             ValidationHelper.ModelValidation(personUpdateRequest);
 
             //get matching person object to update
-            Person matchingPerson = await _personsRepository.GetPersonByPersonID(personUpdateRequest.PersonID) ?? throw new ArgumentException("Given PersonID doesn't exist");
+            Person matchingPerson = await _personsRepository.GetPersonByPersonID(personUpdateRequest.PersonID) ?? throw new InvalidPersonIdException("Given PersonID doesn't exist");
 
             //update
             matchingPerson.PersonName = personUpdateRequest.PersonName;
