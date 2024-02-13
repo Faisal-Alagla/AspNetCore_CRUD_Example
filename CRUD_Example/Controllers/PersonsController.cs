@@ -20,13 +20,21 @@ namespace CRUD_Example.Controllers
     [TypeFilter(typeof(PersonsAlwaysRunResultFilter))]
     public class PersonsController : Controller
     {
-        private readonly IPersonsService _personsService;
+        private readonly IPersonsGetterService _personsGetterService;
+        private readonly IPersonsAdderService _personsAdderService;
+        private readonly IPersonsUpdaterService _personsUpdaterService;
+        private readonly IPersonsSorterService _personsSorterService;
+        private readonly IPersonsDeleterService _personsDeleterService;
         private readonly ICountriesService _countriesService;
         private readonly ILogger<PersonsController> _logger;
 
-        public PersonsController(IPersonsService personsService, ICountriesService countriesService, ILogger<PersonsController> logger)
+        public PersonsController(IPersonsGetterService personsGetterService, IPersonsAdderService personsAdderService, IPersonsUpdaterService personsUpdaterService, IPersonsSorterService personsSorterService, IPersonsDeleterService personsDeleterService, ICountriesService countriesService, ILogger<PersonsController> logger)
         {
-            _personsService = personsService;
+            _personsGetterService = personsGetterService;
+            _personsAdderService = personsAdderService;
+            _personsUpdaterService = personsUpdaterService;
+            _personsSorterService = personsSorterService;
+            _personsDeleterService = personsDeleterService;
             _countriesService = countriesService;
             _logger = logger;
         }
@@ -59,14 +67,14 @@ namespace CRUD_Example.Controllers
             //};
 
             //search filtering
-            List<PersonResponse> persons = await _personsService.GetFilteredPersons(searchBy, searchString);
+            List<PersonResponse> persons = await _personsGetterService.GetFilteredPersons(searchBy, searchString);
 
             //moved to action filter
             //ViewBag.CurrentSearchBy = searchBy;
             //ViewBag.CurrentSearchString = searchString;
 
             //sorting
-            List<PersonResponse> sortedPersons = await _personsService.GetSortedPersons(persons, sortBy, sortOrder);
+            List<PersonResponse> sortedPersons = await _personsSorterService.GetSortedPersons(persons, sortBy, sortOrder);
 
             //moved to action filter
             //ViewBag.CurrentSortBy = sortBy;
@@ -109,7 +117,7 @@ namespace CRUD_Example.Controllers
             //}
 
             //Add the person
-            PersonResponse personResponse = await _personsService.AddPerson(personRequest);
+            PersonResponse personResponse = await _personsAdderService.AddPerson(personRequest);
 
             //navigate to Index() action method in PersonsController (another get request to "persons/index")
             return RedirectToAction("Index", "Persons");
@@ -123,7 +131,7 @@ namespace CRUD_Example.Controllers
         //but it has to be added as a service to the IOC containter (program.cs)
         public async Task<IActionResult> Edit(Guid? personID)
         {
-            PersonResponse? personResponse = await _personsService.GetPersonByPersonID(personID);
+            PersonResponse? personResponse = await _personsGetterService.GetPersonByPersonID(personID);
             if (personResponse == null)
             {
                 return RedirectToAction("Index");
@@ -144,7 +152,7 @@ namespace CRUD_Example.Controllers
         [TypeFilter(typeof(TokenAuthorizationFilter))]
         public async Task<IActionResult> Edit(PersonUpdateRequest personRequest)
         {
-            PersonResponse? personResponse = await _personsService.GetPersonByPersonID(personRequest.PersonID);
+            PersonResponse? personResponse = await _personsGetterService.GetPersonByPersonID(personRequest.PersonID);
             if (personResponse == null)
             {
                 return RedirectToAction("Index");
@@ -152,7 +160,7 @@ namespace CRUD_Example.Controllers
 
             //if (ModelState.IsValid)
             //{
-            PersonResponse updatedPerson = await _personsService.UpdatePerson(personRequest);
+            PersonResponse updatedPerson = await _personsUpdaterService.UpdatePerson(personRequest);
             return RedirectToAction("Index");
             //}
             //---The following part is done in the filter---
@@ -172,7 +180,7 @@ namespace CRUD_Example.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(Guid? personID)
         {
-            PersonResponse? personResponse = await _personsService.GetPersonByPersonID(personID);
+            PersonResponse? personResponse = await _personsGetterService.GetPersonByPersonID(personID);
             if (personResponse == null)
             {
                 return RedirectToAction("Index");
@@ -185,13 +193,13 @@ namespace CRUD_Example.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(PersonUpdateRequest personUpdateRequest)
         {
-            PersonResponse? personResponse = await _personsService.GetPersonByPersonID(personUpdateRequest.PersonID);
+            PersonResponse? personResponse = await _personsGetterService.GetPersonByPersonID(personUpdateRequest.PersonID);
             if (personResponse == null)
             {
                 return RedirectToAction("Index");
             }
 
-            await _personsService.DeletePerson(personUpdateRequest.PersonID);
+            await _personsDeleterService.DeletePerson(personUpdateRequest.PersonID);
 
             return RedirectToAction("Index");
         }
@@ -199,7 +207,7 @@ namespace CRUD_Example.Controllers
         [Route("PersonsPDF")]
         public async Task<IActionResult> PersonsPDF()
         {
-            List<PersonResponse> persons = await _personsService.GetAllPersons();
+            List<PersonResponse> persons = await _personsGetterService.GetAllPersons();
 
             //this class comes from the Rotativa package
             return new ViewAsPdf("PersonsPDF", persons, ViewData)
@@ -212,7 +220,7 @@ namespace CRUD_Example.Controllers
         [Route("PersonsCVS")]
         public async Task<IActionResult> PersonsCSV()
         {
-            MemoryStream memoryStream = await _personsService.GetPersonsCSV();
+            MemoryStream memoryStream = await _personsGetterService.GetPersonsCSV();
 
             return File(memoryStream, "application/octet-stream", "persons.csv");
         }
@@ -220,7 +228,7 @@ namespace CRUD_Example.Controllers
         [Route("PersonsExcel")]
         public async Task<IActionResult> PersonsExcel()
         {
-            MemoryStream memoryStream = await _personsService.GetPersonsExcel();
+            MemoryStream memoryStream = await _personsGetterService.GetPersonsExcel();
 
             //Google -> mime type ->...
             return File(memoryStream, "application/vnd.ms-excel", "persons.xlsx");
