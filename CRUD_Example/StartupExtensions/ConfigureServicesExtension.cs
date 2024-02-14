@@ -24,7 +24,9 @@ namespace CRUD_Example
             services.AddScoped<ICountriesRepository, CountriesRepository>();
             services.AddScoped<IPersonsRepository, PersonsRepository>();
             services.AddScoped<ICountriesService, CountriesService>();
-            services.AddScoped<IPersonsGetterService, PersonsGetterService>();
+            services.AddScoped<IPersonsGetterService, PersonsGetterServiceWithFewerExcelFields>();
+            //services.AddScoped<IPersonsGetterService, PersonsGetterServiceChild>();
+            services.AddScoped<PersonsGetterService, PersonsGetterService>();
             services.AddScoped<IPersonsAdderService, PersonsAdderService>();
             services.AddScoped<IPersonsUpdaterService, PersonsUpdaterService>();
             services.AddScoped<IPersonsSorterService, PersonsSorterService>();

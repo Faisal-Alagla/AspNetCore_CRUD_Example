@@ -140,7 +140,7 @@ namespace Services
             return memoryStream;
         }
 
-        public async Task<MemoryStream> GetPersonsExcel()
+        public virtual async Task<MemoryStream> GetPersonsExcel()
         {
             MemoryStream memoryStream = new MemoryStream();
             //from EPPlus package..
